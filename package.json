@@ -1,0 +1,15 @@
+{
+  "name": "luftdaten-canberra",
+  "version": "1.0.0",
+  "description": "#development ``` npm install -g serverless ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serverless-dynamodb-local": "^0.2.38",
+    "serverless-python-requirements": "^5.0.1"
+  }
+}

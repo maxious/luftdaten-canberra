@@ -20,13 +20,20 @@ service: luftdaten-canberra
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+plugins:
+  - serverless-python-requirements
+  - serverless-dynamodb-local
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+
 provider:
   name: aws
   runtime: python3.8
-
-# you can overwrite defaults here
+  region: ap-southeast-2
 #  stage: dev
-#  region: us-east-1
+
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -111,3 +118,39 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+resources: # CloudFormation template syntax from here on.
+    Resources:
+        usersTable: 
+          Type: AWS::DynamoDB::Table
+          Properties:
+            TableName: usersTable
+            AttributeDefinitions:
+              - AttributeName: recordId
+                AttributeType: N
+              - AttributeName: updateTime
+                AttributeType: N
+              - AttributeName: expiryTime
+                AttributeType: N
+              - AttributeName: locationId
+                AttributeType: N
+              - AttributeName: lat
+                AttributeType: N
+              - AttributeName: lon
+                AttributeType: N
+              - AttributeName: sensorType
+                AttributeType: S
+              - AttributeName: sensorValue
+                AttributeType: N
+            KeySchema:
+              - AttributeName: recordId
+                KeyType: SORT
+              - AttributeName: updateTime
+                KeyType: SORT
+              - AttributeName: locationId
+                KeyType: HASH
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+            TimeToLiveSpecification:
+              AttributeName: expiryTime
+              Enabled: true
