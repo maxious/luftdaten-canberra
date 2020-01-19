@@ -26,8 +26,10 @@ plugins:
 
 custom:
   pythonRequirements:
-    dockerizePip: non-linux
-
+    dockerizePip: non-linux # use docker for pip on non-linux
+  dynamodb:
+    stages:
+      - dev
 provider:
   name: aws
   runtime: python3.8
@@ -66,7 +68,7 @@ provider:
 
 functions:
   hello:
-    handler: handler.hello
+    handler: api.hello
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -120,34 +122,34 @@ functions:
 #       Value: "Some output value"
 resources: # CloudFormation template syntax from here on.
     Resources:
-        usersTable: 
+        metadatenTable: 
           Type: AWS::DynamoDB::Table
           Properties:
-            TableName: usersTable
+            TableName: metadatenTable
             AttributeDefinitions:
-              - AttributeName: recordId
-                AttributeType: N
-              - AttributeName: updateTime
-                AttributeType: N
-              - AttributeName: expiryTime
-                AttributeType: N
-              - AttributeName: locationId
-                AttributeType: N
-              - AttributeName: lat
-                AttributeType: N
-              - AttributeName: lon
-                AttributeType: N
-              - AttributeName: sensorType
-                AttributeType: S
-              - AttributeName: sensorValue
-                AttributeType: N
+              - AttributeName: metadataKey
+                AttributeType: "S"
             KeySchema:
+              - AttributeName: metadataKey
+                KeyType: HASH
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        luftdatenTable: 
+          Type: AWS::DynamoDB::Table
+          Properties:
+            TableName: luftdatenTable
+            AttributeDefinitions:
+              - AttributeName: updateTime
+                AttributeType: "N"
+              - AttributeName: recordId
+                AttributeType: "N"
+
+            KeySchema:
+              - AttributeName: updateTime
+                KeyType: HASH
               - AttributeName: recordId
                 KeyType: SORT
-              - AttributeName: updateTime
-                KeyType: SORT
-              - AttributeName: locationId
-                KeyType: HASH
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1

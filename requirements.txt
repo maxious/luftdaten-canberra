@@ -1,2 +1,3 @@
 arrow==0.15.5
 httpx==0.11.1
+orjson==2.1.4
