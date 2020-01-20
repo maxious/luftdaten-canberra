@@ -55,7 +55,7 @@ def archive_luftdaten(event, context):
                             PM2_5 = Decimal(value['value'])
                     datum = {
                         "luftdaten": 1,
-                        "updateTime": int(updateTime.format('X')),
+                        "updateTime": Decimal(updateTime.format('X')+'.'+str(daten['id']),
                         "expiryTime": int(updateTime.shift(hours=+24).format('X')),
                         "recordId": daten['id'],
                         "locationId": daten['location']['id'], "lat": lat, "lon": lon,

@@ -30,6 +30,16 @@ custom:
   dynamodb:
     stages:
       - dev
+    start:
+      seed: true
+      migrate: true
+    seed:
+      domain:
+        sources:
+          - table: luftdatenTable
+            sources: [./seeds/luftdaten.json]
+          - table: metadatenTable
+            sources: [./seeds/metadaten.json]
 provider:
   name: aws
   runtime: python3.8
