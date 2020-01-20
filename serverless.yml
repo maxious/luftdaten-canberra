@@ -67,8 +67,10 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: api.hello
+  archive:
+    handler: archiver.archive_luftdaten
+  get:
+    handler: api.get_latest
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -142,11 +144,15 @@ resources: # CloudFormation template syntax from here on.
             AttributeDefinitions:
               - AttributeName: updateTime
                 AttributeType: "N"
+              - AttributeName: locationId
+                AttributeType: "N"
               - AttributeName: recordId
                 AttributeType: "N"
 
             KeySchema:
               - AttributeName: updateTime
+                KeyType: HASH
+              - AttributeName: locationId
                 KeyType: HASH
               - AttributeName: recordId
                 KeyType: SORT
