@@ -144,18 +144,14 @@ resources: # CloudFormation template syntax from here on.
             AttributeDefinitions:
               - AttributeName: updateTime
                 AttributeType: "N"
-              - AttributeName: locationId
+              - AttributeName: luftdaten
                 AttributeType: "N"
-              - AttributeName: recordId
-                AttributeType: "N"
-
             KeySchema:
+              - AttributeName: luftdaten
+                KeyType: HASH
               - AttributeName: updateTime
-                KeyType: HASH
-              - AttributeName: locationId
-                KeyType: HASH
-              - AttributeName: recordId
                 KeyType: SORT
+
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1

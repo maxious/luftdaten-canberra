@@ -10,8 +10,22 @@ def get_latest(event, context):
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
         "input": event,
-        "tables": list(ddb.tables.all())
+        "tables": [str(x) for x in ddb.tables.all()]
     }
+    '''
+   var params = {
+    TableName: 'luftdatenTable',
+    KeyConditionExpression: 'luftdaten = :luftdaten AND updateTime > :val',
+    ExpressionAttributeValues: { // a map of substitutions for all attribute values
+   ':luftdaten' : 1,
+      ':val': 1579433200
+    },
+
+};
+docClient.query(params, function(err, data) {
+    if (err) ppJson(err); // an error occurred
+    else ppJson(data); // successful response
+});'''
 # response = table.query(
 #     KeyConditionExpression=Key('username').eq('johndoe')
 # )
@@ -23,3 +37,7 @@ def get_latest(event, context):
     }
 
     return response
+
+
+if __name__ == "__main__":
+    print(get_latest('', ''))
