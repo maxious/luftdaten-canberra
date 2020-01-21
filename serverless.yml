@@ -44,11 +44,24 @@ provider:
   name: aws
   runtime: python3.8
   region: ap-southeast-2
-#  stage: dev
+  stage: prod
 
 
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
+  iamRoleStatements:
+     - Effect: Allow
+       Action:
+         - dynamodb:DescribeTable
+         - dynamodb:Query
+         - dynamodb:Scan
+         - dynamodb:GetItem
+         - dynamodb:PutItem
+         - dynamodb:UpdateItem
+#     - dynamodb:DeleteItem
+         - dynamodb:BatchWriteItem
+       Resource: 
+         - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/luftdatenTable"
+         - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/metadatenTable"
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:ListBucket"
@@ -79,8 +92,16 @@ provider:
 functions:
   archive:
     handler: archiver.archive_luftdaten
+    timeout: 300
+    events:
+      - schedule: rate(5 minutes)
   get:
     handler: api.get_latest
+    events:
+     - http:
+         path: get_latest
+         method: get
+         cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -160,7 +181,7 @@ resources: # CloudFormation template syntax from here on.
               - AttributeName: luftdaten
                 KeyType: HASH
               - AttributeName: updateTime
-                KeyType: SORT
+                KeyType: RANGE
 
             ProvisionedThroughput:
               ReadCapacityUnits: 1

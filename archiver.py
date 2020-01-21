@@ -11,7 +11,7 @@ maxLon = 150
 
 
 def archive_luftdaten(event, context):
-    ddb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000')
+    ddb = boto3.resource('dynamodb') #, endpoint_url='http://localhost:8000')
 
     metadaten = ddb.Table('metadatenTable')
     last_modified = metadaten.get_item(Key={'metadataKey': 'last_modified'}).get(
@@ -55,7 +55,7 @@ def archive_luftdaten(event, context):
                             PM2_5 = Decimal(value['value'])
                     datum = {
                         "luftdaten": 1,
-                        "updateTime": Decimal(updateTime.format('X')+'.'+str(daten['id']),
+                        "updateTime": Decimal(updateTime.format('X')+'.'+str(daten['id'])),
                         "expiryTime": int(updateTime.shift(hours=+24).format('X')),
                         "recordId": daten['id'],
                         "locationId": daten['location']['id'], "lat": lat, "lon": lon,

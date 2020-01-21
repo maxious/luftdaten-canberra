@@ -5,7 +5,7 @@ import json
 
 def get_latest(event, context):
 
-    ddb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000')
+    ddb = boto3.resource('dynamodb') #, endpoint_url='http://localhost:8000')
 
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
