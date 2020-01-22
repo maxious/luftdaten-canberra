@@ -17,7 +17,7 @@ def get_daily_history(event, context):
 
     response = {
         "statusCode": 200,
-        "body": json.dumps(body)
+        "body": json.dumps(items)
     }
 
     return response
