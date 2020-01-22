@@ -11,13 +11,18 @@ def get_daily_history(event, context):
      endpoint_url=(None if os.environ.get('SERVERLESS_STAGE',None) == 'prod' else 'http://localhost:8000'))
 
     response = ddb.Table('luftdatenTable').query(
-        KeyConditionExpression=Key('luftdaten').eq('1') & Key('updateTime').gt('1') 
+        KeyConditionExpression=Key('luftdaten').eq(1) & Key('updateTime').gt(1) 
     )
-    items = response['Items']
-
+    result = {}
+    for item in response['Items']:
+        locationId = int(item['locationId'])
+        if locationId not in result:
+            result[locationId] = {'lat':float(item['lat']), 'lon':float(item['lon']), 'PM10': {}, 'PM2_5': {}}
+        result[locationId]['PM10'][int(item['updateTime'])] = float(item['PM10'])
+        result[locationId]['PM2_5'][int(item['updateTime'])] = float(item['PM2_5'])
     response = {
         "statusCode": 200,
-        "body": json.dumps(items)
+        "body": json.dumps(result)
     }
 
     return response
