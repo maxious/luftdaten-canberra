@@ -12,10 +12,11 @@ maxLat = -34
 minLon = 148
 maxLon = 150
 
+PROD = os.environ.get('SERVERLESS_STAGE',None) == 'prod'
 
 def archive_luftdaten(event, context):
     ddb = boto3.resource('dynamodb',
-     endpoint_url=(None if os.environ.get('SERVERLESS_STAGE',None) == 'prod' else 'http://localhost:8000'))
+     endpoint_url=(None if PROD else 'http://localhost:8000'))
 
     metadaten = ddb.Table('metadatenTable')
     last_modified = metadaten.get_item(Key={'metadataKey': 'last_modified'}).get(
